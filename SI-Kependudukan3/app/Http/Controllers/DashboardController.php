@@ -19,14 +19,15 @@ class DashboardController extends Controller
         $totalLakiLaki = Penduduk::where('jenis_kelamin', 'L')->count();
         $totalPerempuan = Penduduk::where('jenis_kelamin', 'P')->count();
 
-        // Penduduk per RT/RW
-        $pendudukPerRtRw = Penduduk::where('status_hidup', 'Hidup')
-            ->select('rt_ktp', 'rw_ktp', DB::raw('count(*) as total'))
-            ->groupBy('rt_ktp', 'rw_ktp')
+        // Penduduk per RT saja
+        $pendudukPerRt = Penduduk::where('status_hidup', 'Hidup')
+            ->select('rt_ktp', DB::raw('count(*) as total'))
+            ->groupBy('rt_ktp')
+            ->orderBy('rt_ktp')
             ->get()
             ->map(function($item) {
                 return [
-                    'label' => "RT {$item->rt_ktp}/{$item->rw_ktp}",
+                    'label' => "RT {$item->rt_ktp}",
                     'value' => $item->total
                 ];
             });
@@ -66,7 +67,7 @@ class DashboardController extends Controller
             'totalOrganisasi',
             'totalLakiLaki',
             'totalPerempuan',
-            'pendudukPerRtRw',
+            'pendudukPerRt',
             'ageGroups',
             'anggotaPerOrganisasi'
         ));

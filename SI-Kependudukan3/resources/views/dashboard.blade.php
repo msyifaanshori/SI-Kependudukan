@@ -66,17 +66,17 @@
 
     <!-- Charts -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Penduduk per RT/RW -->
+        <!-- Penduduk per RT -->
         <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
-            <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-4">Jumlah Penduduk per RT/RW</h3>
+            <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-4">Jumlah Penduduk per RT</h3>
             <div class="space-y-3">
                 @php
-                    $maxValue = $pendudukPerRtRw->max('value') ?: 1;
+                    $maxValue = $pendudukPerRt->max('value') ?: 1;
                 @endphp
-                @foreach($pendudukPerRtRw as $item)
+                @foreach($pendudukPerRt as $item)
                 <div class="flex items-center">
-                    <div class="w-1/3 text-sm text-gray-600 truncate pr-2">{{ $item['label'] }}</div>
-                    <div class="w-2/3 bg-gray-200 rounded-full h-6">
+                    <div class="w-1/4 text-sm text-gray-600 truncate pr-2">{{ $item['label'] }}</div>
+                    <div class="w-3/4 bg-gray-200 rounded-full h-6">
                         <div class="bg-blue-500 h-6 rounded-full flex items-center justify-end pr-2 text-white text-xs font-medium" 
                              style="width: {{ ($item['value'] / $maxValue) * 100 }}%">
                             {{ $item['value'] }} Orang
@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 @endforeach
-                @if($pendudukPerRtRw->isEmpty())
+                @if($pendudukPerRt->isEmpty())
                 <p class="text-center text-gray-400 text-sm py-4">Data tidak tersedia.</p>
                 @endif
             </div>
