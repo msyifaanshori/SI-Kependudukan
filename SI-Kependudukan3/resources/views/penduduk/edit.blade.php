@@ -39,7 +39,7 @@
 
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Tanggal Lahir</label>
-                <input type="date" name="tgl_lahir" value="{{ old('tgl_lahir', $penduduk->tgl_lahir->format('Y-m-d')) }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('tgl_lahir') border-red-500 @enderror">
+                <input type="date" name="tgl_lahir" value="{{ old('tgl_lahir', $penduduk->tgl_lahir->format('Y-m-d')) }}" max="{{ date('Y-m-d') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('tgl_lahir') border-red-500 @enderror">
                 @error('tgl_lahir')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -52,6 +52,25 @@
                     <option value="P" {{ old('jenis_kelamin', $penduduk->jenis_kelamin) == 'P' ? 'selected' : '' }}>Perempuan</option>
                 </select>
                 @error('jenis_kelamin')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Status Hubungan dalam Keluarga</label>
+                <select name="status_hubungan" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('status_hubungan') border-red-500 @enderror">
+                    <option value="">Pilih Status Hubungan</option>
+                    <option value="KEPALA_KELUARGA" {{ old('status_hubungan', $penduduk->status_hubungan ?? 'ANAK') == 'KEPALA_KELUARGA' ? 'selected' : '' }}>Kepala Keluarga</option>
+                    <option value="ISTRI" {{ old('status_hubungan', $penduduk->status_hubungan ?? 'ANAK') == 'ISTRI' ? 'selected' : '' }}>Istri</option>
+                    <option value="SUAMI" {{ old('status_hubungan', $penduduk->status_hubungan ?? 'ANAK') == 'SUAMI' ? 'selected' : '' }}>Suami</option>
+                    <option value="ANAK" {{ old('status_hubungan', $penduduk->status_hubungan ?? 'ANAK') == 'ANAK' ? 'selected' : '' }}>Anak</option>
+                    <option value="CUCU" {{ old('status_hubungan', $penduduk->status_hubungan ?? 'ANAK') == 'CUCU' ? 'selected' : '' }}>Cucu</option>
+                    <option value="ORANG_TUA" {{ old('status_hubungan', $penduduk->status_hubungan ?? 'ANAK') == 'ORANG_TUA' ? 'selected' : '' }}>Orang Tua</option>
+                    <option value="MERTUA" {{ old('status_hubungan', $penduduk->status_hubungan ?? 'ANAK') == 'MERTUA' ? 'selected' : '' }}>Mertua</option>
+                    <option value="MENANTU" {{ old('status_hubungan', $penduduk->status_hubungan ?? 'ANAK') == 'MENANTU' ? 'selected' : '' }}>Menantu</option>
+                    <option value="LAINNYA" {{ old('status_hubungan', $penduduk->status_hubungan ?? 'ANAK') == 'LAINNYA' ? 'selected' : '' }}>Lainnya</option>
+                </select>
+                @error('status_hubungan')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
@@ -83,24 +102,24 @@
             </div>
 
             <div class="md:col-span-2">
-                <label class="block text-gray-700 font-medium mb-2">Alamat KTP</label>
-                <input type="text" name="alamat_ktp" value="{{ old('alamat_ktp', $penduduk->alamat_ktp) }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('alamat_ktp') border-red-500 @enderror">
+                <label class="block text-gray-700 font-medium mb-2">Alamat KTP <span class="text-gray-500 text-sm font-normal">(Opsional - Kosongkan untuk menggunakan alamat KK)</span></label>
+                <input type="text" name="alamat_ktp" value="{{ old('alamat_ktp', $penduduk->alamat_ktp) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('alamat_ktp') border-red-500 @enderror" placeholder="Kosongkan jika sama dengan alamat KK">
                 @error('alamat_ktp')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label class="block text-gray-700 font-medium mb-2">RT</label>
-                <input type="text" name="rt_ktp" value="{{ old('rt_ktp', $penduduk->rt_ktp) }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('rt_ktp') border-red-500 @enderror">
+                <label class="block text-gray-700 font-medium mb-2">RT <span class="text-gray-500 text-sm font-normal">(Opsional)</span></label>
+                <input type="text" name="rt_ktp" value="{{ old('rt_ktp', $penduduk->rt_ktp) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('rt_ktp') border-red-500 @enderror" placeholder="Kosongkan untuk menggunakan RT KK">
                 @error('rt_ktp')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label class="block text-gray-700 font-medium mb-2">RW</label>
-                <input type="text" name="rw_ktp" value="{{ old('rw_ktp', $penduduk->rw_ktp) }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('rw_ktp') border-red-500 @enderror">
+                <label class="block text-gray-700 font-medium mb-2">RW <span class="text-gray-500 text-sm font-normal">(Opsional)</span></label>
+                <input type="text" name="rw_ktp" value="{{ old('rw_ktp', $penduduk->rw_ktp) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('rw_ktp') border-red-500 @enderror" placeholder="Kosongkan untuk menggunakan RW KK">
                 @error('rw_ktp')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror

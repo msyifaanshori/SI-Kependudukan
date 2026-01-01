@@ -19,6 +19,7 @@ class Penduduk extends Model
         'nama_lengkap',
         'tgl_lahir',
         'jenis_kelamin',
+        'status_hubungan',
         'status_hidup',
         'alamat_ktp',
         'rt_ktp',

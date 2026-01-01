@@ -28,14 +28,12 @@ class KartuKeluargaController extends Controller
 
     public function create()
     {
-        $penduduk = Penduduk::where('status_hidup', 'Hidup')->get();
-        return view('kartu-keluarga.create', compact('penduduk'));
+        return view('kartu-keluarga.create');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kepala_keluarga_nik' => 'required|exists:penduduk,nik',
             'alamat' => 'required|string',
             'rt' => 'required|string|max:10',
             'rw' => 'required|string|max:10',
@@ -43,13 +41,13 @@ class KartuKeluargaController extends Controller
 
         // Generate No KK
         $validated['no_kk'] = '320124' . rand(1000000000, 9999999999);
+        $validated['kepala_keluarga_nik'] = null; // Set null dulu, akan diisi otomatis saat tambah penduduk
 
         $kartuKeluarga = KartuKeluarga::create($validated);
-        $kepalaKeluarga = Penduduk::find($validated['kepala_keluarga_nik']);
 
-        HistoryLog::logAction('Tambah KK', "Menambahkan KK baru untuk Kepala Keluarga: {$kepalaKeluarga->nama_lengkap}.");
+        HistoryLog::logAction('Tambah KK', "Menambahkan KK baru dengan No. {$kartuKeluarga->no_kk}.");
 
-        return redirect()->route('kartu-keluarga.index')->with('success', 'Data Kartu Keluarga berhasil ditambahkan.');
+        return redirect()->route('kartu-keluarga.index')->with('success', 'Data Kartu Keluarga berhasil ditambahkan. Silakan tambahkan data penduduk untuk KK ini.');
     }
 
     public function show($no_kk)
