@@ -34,13 +34,12 @@ class KartuKeluargaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'no_kk' => 'required|string|size:16|unique:kartu_keluarga,no_kk',
             'alamat' => 'required|string',
             'rt' => 'required|string|max:10',
             'rw' => 'required|string|max:10',
         ]);
-
-        // Generate No KK
-        $validated['no_kk'] = '320124' . rand(1000000000, 9999999999);
+        
         $validated['kepala_keluarga_nik'] = null; // Set null dulu, akan diisi otomatis saat tambah penduduk
 
         $kartuKeluarga = KartuKeluarga::create($validated);

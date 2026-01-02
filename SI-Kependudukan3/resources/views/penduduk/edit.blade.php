@@ -26,12 +26,24 @@
 
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Nomor Kartu Keluarga (KK)</label>
-                <select name="no_kk" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('no_kk') border-red-500 @enderror">
+                <div class="flex items-center space-x-2 mb-2">
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="kk_input_mode" value="select" onchange="toggleKKInput()" class="mr-2">
+                        <span class="text-sm">Pilih dari KK yang ada</span>
+                    </label>
+                    <label class="inline-flex items-center ml-4">
+                        <input type="radio" name="kk_input_mode" value="manual" checked onchange="toggleKKInput()" class="mr-2">
+                        <span class="text-sm">Input Manual</span>
+                    </label>
+                </div>
+                <input type="hidden" name="no_kk_input_type" id="no_kk_input_type" value="manual">
+                <select name="no_kk" id="no_kk_select" style="display:none;" disabled class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('no_kk') border-red-500 @enderror">
                     <option value="">Pilih No. KK</option>
                     @foreach($kartuKeluarga as $kk)
                         <option value="{{ $kk->no_kk }}" {{ old('no_kk', $penduduk->no_kk) == $kk->no_kk ? 'selected' : '' }}>{{ $kk->no_kk }}</option>
                     @endforeach
                 </select>
+                <input type="text" name="no_kk" id="no_kk_input" value="{{ old('no_kk', $penduduk->no_kk) }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('no_kk') border-red-500 @enderror" placeholder="Masukkan 16 digit No. KK" maxlength="16" pattern="[0-9]{16}">
                 @error('no_kk')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -143,4 +155,32 @@
         </div>
     </form>
 </div>
+
+<script>
+function toggleKKInput() {
+    const mode = document.querySelector('input[name="kk_input_mode"]:checked').value;
+    const selectInput = document.getElementById('no_kk_select');
+    const manualInput = document.getElementById('no_kk_input');
+    const typeInput = document.getElementById('no_kk_input_type');
+    
+    if (mode === 'manual') {
+        selectInput.style.display = 'none';
+        selectInput.required = false;
+        selectInput.disabled = true;
+        manualInput.style.display = 'block';
+        manualInput.required = true;
+        manualInput.disabled = false;
+        manualInput.focus();
+        typeInput.value = 'manual';
+    } else {
+        selectInput.style.display = 'block';
+        selectInput.required = true;
+        selectInput.disabled = false;
+        manualInput.style.display = 'none';
+        manualInput.required = false;
+        manualInput.disabled = true;
+        typeInput.value = 'select';
+    }
+}
+</script>
 @endsection

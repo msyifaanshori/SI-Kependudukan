@@ -8,13 +8,28 @@
 
     <div class="mb-4 p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700">
         <p class="font-medium">📝 Petunjuk:</p>
-        <p class="text-sm mt-1">Buat Kartu Keluarga terlebih dahulu dengan mengisi alamat. Setelah itu, Anda dapat menambahkan anggota keluarga termasuk Kepala Keluarga melalui menu "Tambah Penduduk".</p>
+        <p class="text-sm mt-1">Input Nomor KK secara manual (16 digit). Setelah itu, Anda dapat menambahkan anggota keluarga termasuk Kepala Keluarga melalui menu "Tambah Penduduk".</p>
     </div>
 
     <form action="{{ route('kartu-keluarga.store') }}" method="POST">
         @csrf
         
         <div class="space-y-4">
+            <!-- Input Nomor KK Manual -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Nomor Kartu Keluarga (KK) - 16 Digit</label>
+                <input type="text" name="no_kk" value="{{ old('no_kk') }}" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('no_kk') border-red-500 @enderror" 
+                       placeholder="Contoh: 3201241234567890" 
+                       maxlength="16" 
+                       pattern="[0-9]{16}"
+                       title="Masukkan 16 digit angka">
+                <p class="text-gray-500 text-sm mt-1">Masukkan 16 digit angka Nomor KK</p>
+                @error('no_kk')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Alamat</label>
                 <input type="text" name="alamat" value="{{ old('alamat') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('alamat') border-red-500 @enderror" placeholder="Contoh: Jl. Merdeka No. 123">

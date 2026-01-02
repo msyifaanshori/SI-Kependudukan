@@ -10,6 +10,21 @@
         @csrf
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- NIK Input Manual -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">NIK (Nomor Induk Kependudukan) - 16 Digit</label>
+                <input type="text" name="nik" value="{{ old('nik') }}" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('nik') border-red-500 @enderror" 
+                       placeholder="Contoh: 3201231234567890" 
+                       maxlength="16" 
+                       pattern="[0-9]{16}"
+                       title="Masukkan 16 digit angka NIK">
+                <p class="text-gray-500 text-sm mt-1">Masukkan 16 digit angka NIK</p>
+                @error('nik')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Nama Lengkap</label>
                 <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('nama_lengkap') border-red-500 @enderror">
@@ -18,14 +33,17 @@
                 @enderror
             </div>
 
-            <div>
-                <label class="block text-gray-700 font-medium mb-2">Nomor Kartu Keluarga (KK)</label>
-                <select name="no_kk" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('no_kk') border-red-500 @enderror">
-                    <option value="">Pilih No. KK</option>
-                    @foreach($kartuKeluarga as $kk)
-                        <option value="{{ $kk->no_kk }}" {{ old('no_kk') == $kk->no_kk ? 'selected' : '' }}>{{ $kk->no_kk }}</option>
-                    @endforeach
-                </select>
+            <!-- No. KK Input Manual -->
+            <div class="md:col-span-2">
+                <label class="block text-gray-700 font-medium mb-2">Nomor Kartu Keluarga (KK) - 16 Digit</label>
+                <input type="hidden" name="no_kk_input_type" value="manual">
+                <input type="text" name="no_kk" value="{{ old('no_kk') }}" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('no_kk') border-red-500 @enderror" 
+                       placeholder="Contoh: 3201241234567890" 
+                       maxlength="16" 
+                       pattern="[0-9]{16}"
+                       title="Masukkan 16 digit angka No. KK">
+                <p class="text-gray-500 text-sm mt-1">Masukkan 16 digit angka No. KK (akan dibuat otomatis jika belum ada)</p>
                 @error('no_kk')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror

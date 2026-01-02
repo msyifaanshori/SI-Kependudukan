@@ -39,8 +39,10 @@ class PendudukController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'nik' => 'required|string|size:16|unique:penduduk,nik',
             'nama_lengkap' => 'required|string|max:100',
-            'no_kk' => 'required|exists:kartu_keluarga,no_kk',
+            'no_kk' => 'required|string|size:16',
+            'no_kk_input_type' => 'required|in:select,manual',
             'tgl_lahir' => 'required|date|before_or_equal:today',
             'jenis_kelamin' => 'required|in:L,P',
             'status_hubungan' => 'required|in:KEPALA_KELUARGA,ISTRI,SUAMI,ANAK,CUCU,ORANG_TUA,MERTUA,MENANTU,LAINNYA',
@@ -52,8 +54,28 @@ class PendudukController extends Controller
             'id_pekerjaan' => 'required|exists:pekerjaan,id_pekerjaan',
         ]);
 
-        // Generate NIK
-        $validated['nik'] = '320123' . rand(1000000000, 9999999999);
+        // Validasi No. KK harus ada di database jika menggunakan select
+        if ($validated['no_kk_input_type'] === 'select') {
+            $kkExists = KartuKeluarga::where('no_kk', $validated['no_kk'])->exists();
+            if (!$kkExists) {
+                return back()->withErrors(['no_kk' => 'Nomor KK tidak ditemukan'])->withInput();
+            }
+        } else {
+            // Jika input manual, cek apakah KK sudah ada atau buat baru
+            $kartuKeluargaExists = KartuKeluarga::where('no_kk', $validated['no_kk'])->first();
+            if (!$kartuKeluargaExists) {
+                // Buat KK baru otomatis dengan data dari input penduduk
+                KartuKeluarga::create([
+                    'no_kk' => $validated['no_kk'],
+                    'alamat' => $validated['alamat_ktp'] ?? 'Alamat belum diisi',
+                    'rt' => $validated['rt_ktp'] ?? '000',
+                    'rw' => $validated['rw_ktp'] ?? '000',
+                    'kepala_keluarga_nik' => null,
+                ]);
+                
+                HistoryLog::logAction('Tambah KK Otomatis', "Membuat KK baru dengan No. {$validated['no_kk']} secara otomatis dari input manual penduduk.");
+            }
+        }
 
         // Auto-fill alamat_ktp dari kartu keluarga jika kosong
         if (empty($validated['alamat_ktp']) || empty($validated['rt_ktp']) || empty($validated['rw_ktp'])) {
@@ -121,7 +143,8 @@ class PendudukController extends Controller
 
         $validated = $request->validate([
             'nama_lengkap' => 'required|string|max:100',
-            'no_kk' => 'required|exists:kartu_keluarga,no_kk',
+            'no_kk' => 'required|string|size:16',
+            'no_kk_input_type' => 'required|in:select,manual',
             'tgl_lahir' => 'required|date|before_or_equal:today',
             'jenis_kelamin' => 'required|in:L,P',
             'status_hubungan' => 'required|in:KEPALA_KELUARGA,ISTRI,SUAMI,ANAK,CUCU,ORANG_TUA,MERTUA,MENANTU,LAINNYA',
@@ -132,6 +155,29 @@ class PendudukController extends Controller
             'id_pendidikan' => 'required|exists:pendidikan,id_pendidikan',
             'id_pekerjaan' => 'required|exists:pekerjaan,id_pekerjaan',
         ]);
+
+        // Validasi No. KK harus ada di database jika menggunakan select
+        if ($validated['no_kk_input_type'] === 'select') {
+            $kkExists = KartuKeluarga::where('no_kk', $validated['no_kk'])->exists();
+            if (!$kkExists) {
+                return back()->withErrors(['no_kk' => 'Nomor KK tidak ditemukan'])->withInput();
+            }
+        } else {
+            // Jika input manual, cek apakah KK sudah ada atau buat baru
+            $kartuKeluargaExists = KartuKeluarga::where('no_kk', $validated['no_kk'])->first();
+            if (!$kartuKeluargaExists) {
+                // Buat KK baru otomatis dengan data dari input penduduk
+                KartuKeluarga::create([
+                    'no_kk' => $validated['no_kk'],
+                    'alamat' => $validated['alamat_ktp'] ?? 'Alamat belum diisi',
+                    'rt' => $validated['rt_ktp'] ?? '000',
+                    'rw' => $validated['rw_ktp'] ?? '000',
+                    'kepala_keluarga_nik' => null,
+                ]);
+                
+                HistoryLog::logAction('Tambah KK Otomatis', "Membuat KK baru dengan No. {$validated['no_kk']} secara otomatis dari input manual penduduk.");
+            }
+        }
 
         // Auto-fill alamat_ktp dari kartu keluarga jika kosong
         if (empty($validated['alamat_ktp']) || empty($validated['rt_ktp']) || empty($validated['rw_ktp'])) {
