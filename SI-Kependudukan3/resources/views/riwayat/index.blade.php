@@ -11,6 +11,7 @@
             <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                 <tr>
                     <th class="py-3 px-6 text-left">Waktu</th>
+                    <th class="py-3 px-6 text-left">User</th>
                     <th class="py-3 px-6 text-left">Aksi</th>
                     <th class="py-3 px-6 text-left">Detail</th>
                 </tr>
@@ -20,6 +21,14 @@
                 <tr class="border-b border-gray-200 hover:bg-gray-100">
                     <td class="py-3 px-6 text-left whitespace-nowrap">
                         {{ $log->created_at->format('d/m/Y H:i:s') }}
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span class="font-medium">{{ $log->user_name ?? 'System' }}</span>
+                        </div>
                     </td>
                     <td class="py-3 px-6 text-left">
                         <span class="py-1 px-3 rounded-full text-xs font-semibold 
@@ -35,7 +44,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="3" class="text-center text-gray-500 py-4">Belum ada riwayat perubahan data.</td>
+                    <td colspan="4" class="text-center text-gray-500 py-4">Belum ada riwayat perubahan data.</td>
                 </tr>
                 @endforelse
             </tbody>

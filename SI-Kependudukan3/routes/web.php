@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\KartuKeluargaController;
@@ -8,22 +9,30 @@ use App\Http\Controllers\OrganisasiMasyarakatController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\LaporanController;
 
-// Dashboard
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+// Auth Routes
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Penduduk Routes
-Route::resource('penduduk', PendudukController::class);
+// Protected Routes (require authentication)
+Route::middleware('auth')->group(function () {
+    // Dashboard
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-// Kartu Keluarga Routes
-Route::resource('kartu-keluarga', KartuKeluargaController::class);
+    // Penduduk Routes
+    Route::resource('penduduk', PendudukController::class);
 
-// Organisasi Routes
-Route::resource('organisasi', OrganisasiMasyarakatController::class);
-Route::post('organisasi/{id}/anggota', [OrganisasiMasyarakatController::class, 'addAnggota'])->name('organisasi.addAnggota');
-Route::delete('organisasi/{id}/anggota/{nik}', [OrganisasiMasyarakatController::class, 'removeAnggota'])->name('organisasi.removeAnggota');
+    // Kartu Keluarga Routes
+    Route::resource('kartu-keluarga', KartuKeluargaController::class);
 
-// Riwayat Routes
-Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+    // Organisasi Routes
+    Route::resource('organisasi', OrganisasiMasyarakatController::class);
+    Route::post('organisasi/{id}/anggota', [OrganisasiMasyarakatController::class, 'addAnggota'])->name('organisasi.addAnggota');
+    Route::delete('organisasi/{id}/anggota/{nik}', [OrganisasiMasyarakatController::class, 'removeAnggota'])->name('organisasi.removeAnggota');
 
-// Laporan Routes
-Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    // Riwayat Routes
+    Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+
+    // Laporan Routes
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+});
